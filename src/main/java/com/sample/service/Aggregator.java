@@ -1,19 +1,18 @@
 package com.sample.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.integration.aggregator.ReleaseStrategy;
 import org.springframework.integration.store.MessageGroup;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
 
-import com.sample.conf.PrintInfo;
 import com.sample.domain.DomainObject;
 
 @Component
 public class Aggregator implements ReleaseStrategy {
 
-  @Autowired
-  private PrintInfo printInfo;
+  private static Logger log = LoggerFactory.getLogger(Aggregator.class);
 
   @Override
   public boolean canRelease(MessageGroup group) {
@@ -21,10 +20,10 @@ public class Aggregator implements ReleaseStrategy {
     DomainObject event = (DomainObject) message.getPayload();
     boolean result = group.getMessages().size() == event.getCount();
     if (result) {
-      printInfo.print(
+      log.info(
           "Aggregator: done!! " + event.toString() + " finished " + group.getMessages().size());
     } else {
-      printInfo.print("Aggregator: not done!!");
+      log.info("Aggregator: not done!!");
     }
     return result;
   }

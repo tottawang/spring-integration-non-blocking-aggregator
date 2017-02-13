@@ -2,6 +2,8 @@ package com.sample.service;
 
 import java.net.URI;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +24,8 @@ import rx.Observable;
 @Component
 public class HystrixService {
 
+  private static Logger log = LoggerFactory.getLogger(HystrixService.class);
+
   @Value("${HYSTRIX_TEST_URL:url_not_accessiable}")
   private String HYSTRIX_TEST_URL;
 
@@ -36,7 +40,7 @@ public class HystrixService {
     return new ObservableResult<String>() {
       @Override
       public String invoke() {
-        System.out.println(Thread.currentThread().getName() + ": " + " non blocking started");
+        log.info(" non blocking started");
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
         HttpEntity<String> entity = new HttpEntity<String>(headers);
