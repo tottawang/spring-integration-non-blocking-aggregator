@@ -23,6 +23,7 @@ public class Splitter extends AbstractMessageSplitter {
     if (list.isEmpty()) {
       cleaner.cleanup();
     } else {
+      System.out.println("Splitter: set count on message: " + list.size());
       list.forEach(m -> m.setCount(list.size()));
     }
     return list;

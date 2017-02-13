@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.integration.channel.DirectChannel;
 import org.springframework.integration.channel.ExecutorChannel;
 import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.dsl.IntegrationFlows;
@@ -14,7 +15,6 @@ import org.springframework.integration.dsl.channel.MessageChannels;
 import org.springframework.integration.util.CallerBlocksPolicy;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-import com.sample.domain.DomainObject;
 import com.sample.service.Aggregator;
 import com.sample.service.Cleaner;
 import com.sample.service.Handler;
@@ -63,14 +63,20 @@ public class ApplicationConfig extends ResourceConfig {
   }
 
   @Bean
-  public IntegrationFlow primaryFlow() {
-    return IntegrationFlows.from(workerChannel()).transform(transformer).split(splitter, null)
-        .handle((m, h) -> {
-          // http://stackoverflow.com/questions/34929476/spring-dsl-sending-error-message-to-jms-queue-get-an-error-one-way-messageha
-          handler.getMessage((DomainObject) m);
-          return m;
-        }).handle(m -> cleaner.cleanup(m)).get();
+  @Qualifier("aggregatorChannel")
+  public DirectChannel aggregatorChannel() {
+    return MessageChannels.direct().get();
   }
 
+  @Bean
+  public IntegrationFlow primaryFlow() {
+    return IntegrationFlows.from(workerChannel()).transform(transformer).split(splitter, null)
+        .handle(m -> handler.getMessage(m)).get();
+  }
 
+  @Bean
+  public IntegrationFlow aggregatorFlow() {
+    return IntegrationFlows.from(aggregatorChannel()).aggregate(a -> a.processor(aggregator), null)
+        .handle(m -> cleaner.cleanup(m)).get();
+  }
 }

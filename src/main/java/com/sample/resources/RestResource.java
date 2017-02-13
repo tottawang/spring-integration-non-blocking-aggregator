@@ -36,4 +36,5 @@ public class RestResource {
     Map<String, Object> headers = new HashMap<String, Object>();
     return primaryWorkerChannel.send(new GenericMessage<>(group, headers));
   }
+
 }
