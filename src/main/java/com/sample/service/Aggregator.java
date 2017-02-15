@@ -20,10 +20,10 @@ public class Aggregator implements ReleaseStrategy {
     DomainObject event = (DomainObject) message.getPayload();
     boolean result = group.getMessages().size() == event.getCount();
     if (result) {
-      log.info(
-          "Aggregator: done!! " + event.toString() + " finished " + group.getMessages().size());
+      log.info(String.format("Aggregator: done!! %s completed %s", event.toString(),
+          group.getMessages().size()));
     } else {
-      log.info("Aggregator: not done!!");
+      log.info("Aggregator: not done yet!!");
     }
     return result;
   }

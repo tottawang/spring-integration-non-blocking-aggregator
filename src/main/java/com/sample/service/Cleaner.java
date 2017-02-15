@@ -14,7 +14,6 @@ public class Cleaner {
 
   private static Logger log = LoggerFactory.getLogger(Cleaner.class);
 
-
   /**
    * Cleaner is to release resource when first message is completed.
    * 
@@ -23,7 +22,7 @@ public class Cleaner {
   public void cleanup(Message<?> message) {
     @SuppressWarnings("unchecked")
     ArrayList<DomainObject> objects = (ArrayList<DomainObject>) message.getPayload();
-    log.info("Cleaner: " + objects.size() + " messages to clean up");
+    log.info(String.format("Cleaner: %s messages to clean up", objects.size()));
   }
 
   /**

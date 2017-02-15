@@ -22,12 +22,12 @@ public class Splitter extends AbstractMessageSplitter {
   @SuppressWarnings("unchecked")
   @Override
   protected Object splitMessage(Message<?> message) {
-    log.info("Splitter: header: " + message.getHeaders());
+    log.info("Splitter: headers: " + message.getHeaders());
     List<DomainObject> list = (List<DomainObject>) message.getPayload();
     if (list.isEmpty()) {
       cleaner.cleanup();
     } else {
-      log.info("Splitter: set count on message: " + list.size());
+      log.info(String.format("Splitter: set count on message: ", list.size()));
       list.forEach(m -> m.setCount(list.size()));
     }
     return list;
