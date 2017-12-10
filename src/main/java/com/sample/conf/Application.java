@@ -36,7 +36,6 @@ public class Application extends AsyncConfigurerSupport {
     app.run(args);
   }
 
-
   @Bean(name = DEFAULT_REST_TEMPLATE)
   public RestTemplate restTemplate() {
     return new RestTemplate(getRequestFactory());

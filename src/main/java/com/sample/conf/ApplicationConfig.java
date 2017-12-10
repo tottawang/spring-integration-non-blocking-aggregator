@@ -2,7 +2,6 @@ package com.sample.conf;
 
 import java.util.concurrent.Executor;
 
-import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -22,7 +21,7 @@ import com.sample.service.Splitter;
 import com.sample.service.Transformer;
 
 @Configuration
-public class ApplicationConfig extends ResourceConfig {
+public class ApplicationConfig {
 
   @Autowired
   private Transformer transformer;
@@ -38,10 +37,6 @@ public class ApplicationConfig extends ResourceConfig {
 
   @Autowired
   private Aggregator aggregator;
-
-  public ApplicationConfig() {
-    packages("com.sample.resources");
-  }
 
   @Bean(name = "primaryWorkers")
   public Executor executors() {
@@ -70,7 +65,7 @@ public class ApplicationConfig extends ResourceConfig {
 
   @Bean
   public IntegrationFlow primaryFlow() {
-    return IntegrationFlows.from(workerChannel()).transform(transformer).split(splitter, null)
+    return IntegrationFlows.from(workerChannel()).transform(transformer).split(splitter)
         .handle(m -> handler.getMessage(m)).get();
   }
 

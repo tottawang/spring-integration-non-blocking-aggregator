@@ -58,7 +58,7 @@ public class Handler {
     DomainObject event = (DomainObject) message.getPayload();
     log.info("Handler: " + event.getName());
     long start = System.currentTimeMillis();
-    wrapPublish(event, message.getHeaders());
+    aggregatorChannel.send(new GenericMessage<>(event, message.getHeaders()));
     long end = System.currentTimeMillis();
     log.info(String.format("Time taken to get %s results is %s milliseconds", event.getName(),
         (end - start)));
