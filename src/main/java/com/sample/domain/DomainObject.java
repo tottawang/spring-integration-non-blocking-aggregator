@@ -12,6 +12,10 @@ public class DomainObject {
     this.group = group;
   }
 
+  public String getkey() {
+    return name + group;
+  }
+
   public String getName() {
     return name;
   }

@@ -16,6 +16,14 @@ public class Aggregator implements ReleaseStrategy {
 
   @Override
   public boolean canRelease(MessageGroup group) {
+
+    try {
+      Thread.sleep(50);
+    } catch (InterruptedException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+
     Message<?> message = group.getOne();
     DomainObject event = (DomainObject) message.getPayload();
     boolean result = group.getMessages().size() == event.getCount();

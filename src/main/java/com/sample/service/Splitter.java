@@ -1,5 +1,7 @@
 package com.sample.service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -19,11 +21,23 @@ public class Splitter extends AbstractMessageSplitter {
   @Autowired
   private Cleaner cleaner;
 
-  @SuppressWarnings("unchecked")
   @Override
   protected Object splitMessage(Message<?> message) {
     log.info("Splitter: headers: " + message.getHeaders());
-    List<DomainObject> list = (List<DomainObject>) message.getPayload();
+
+    // test aggregator memory issue with large messages
+    List<DomainObject> list = new ArrayList<>();
+    for (int i = 0; i < 3000; i++) {
+      DomainObject object = new DomainObject("name" + i, "group1");
+
+      char[] chars = new char[1500];
+      Arrays.fill(chars, 'a');
+      String str = new String(chars);
+      object.setValue(str);
+
+      list.add(object);
+    }
+
     if (list.isEmpty()) {
       cleaner.cleanup();
     } else {

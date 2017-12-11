@@ -41,7 +41,7 @@ public class ApplicationConfig {
   @Bean(name = "primaryWorkers")
   public Executor executors() {
     ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-    int poolSize = 10;
+    int poolSize = 200;
     executor.setCorePoolSize(8);
     executor.setMaxPoolSize(poolSize);
     executor.setQueueCapacity(256);

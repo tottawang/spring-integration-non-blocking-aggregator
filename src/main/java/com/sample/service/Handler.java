@@ -27,7 +27,10 @@ public class Handler {
   public String handleMessage(Message<?> message) {
     DomainObject event = (DomainObject) message.getPayload();
     log.info("Handler: " + event.getName());
-    aggregatorChannel.send(new GenericMessage<>(event, message.getHeaders()));
+    String key = event.getkey();
+    aggregatorChannel.send(new GenericMessage<>(key, message.getHeaders()));
+    // memory issue that we should not send full payload to aggregator
+    // aggregatorChannel.send(new GenericMessage<>(event, message.getHeaders()));
     return "";
   }
 
