@@ -1,13 +1,9 @@
 package com.sample.service;
 
-import java.util.ArrayList;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
-
-import com.sample.domain.DomainObject;
 
 @Component
 public class Cleaner {
@@ -20,9 +16,7 @@ public class Cleaner {
    * @param message
    */
   public void cleanup(Message<?> message) {
-    @SuppressWarnings("unchecked")
-    ArrayList<DomainObject> objects = (ArrayList<DomainObject>) message.getPayload();
-    log.info(String.format("Cleaner: %s messages to clean up", objects.size()));
+    log.info("Cleaner: messages to clean up");
   }
 
   /**

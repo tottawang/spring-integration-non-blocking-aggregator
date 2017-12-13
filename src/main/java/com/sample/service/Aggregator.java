@@ -7,7 +7,7 @@ import org.springframework.integration.store.MessageGroup;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
 
-import com.sample.domain.DomainObject;
+import com.sample.domain.DomainObjectKey;
 
 @Component
 public class Aggregator implements ReleaseStrategy {
@@ -25,11 +25,15 @@ public class Aggregator implements ReleaseStrategy {
     }
 
     Message<?> message = group.getOne();
-    DomainObject event = (DomainObject) message.getPayload();
-    boolean result = group.getMessages().size() == event.getCount();
+
+    DomainObjectKey key = (DomainObjectKey) message.getPayload();
+    boolean result = group.getMessages().size() == key.getCount();
+
+    // DomainObject event = (DomainObject) message.getPayload();
+    // boolean result = group.getMessages().size() == event.getCount();
+
     if (result) {
-      log.info(String.format("Aggregator: done!! %s completed %s", event.toString(),
-          group.getMessages().size()));
+      log.info(String.format("Aggregator: done!! %s completed %s", "", group.getMessages().size()));
     } else {
       log.info("Aggregator: not done yet!!");
     }

@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.integration.channel.DirectChannel;
 import org.springframework.integration.channel.ExecutorChannel;
 import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.dsl.IntegrationFlows;
@@ -51,6 +50,19 @@ public class ApplicationConfig {
     return executor;
   }
 
+  @Bean(name = "aggregatorExecutors")
+  public Executor aggregatorExecutors() {
+    ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+    int poolSize = 200;
+    executor.setCorePoolSize(8);
+    executor.setMaxPoolSize(poolSize);
+    executor.setQueueCapacity(256);
+    executor.setThreadNamePrefix("aggregatorExecutors-");
+    executor.setRejectedExecutionHandler(new CallerBlocksPolicy(5000));
+    executor.initialize();
+    return executor;
+  }
+
   @Bean
   @Qualifier("primaryWorkerChannel")
   public ExecutorChannel workerChannel() {
@@ -59,8 +71,8 @@ public class ApplicationConfig {
 
   @Bean
   @Qualifier("aggregatorChannel")
-  public DirectChannel aggregatorChannel() {
-    return MessageChannels.direct().get();
+  public ExecutorChannel aggregatorChannel() {
+    return MessageChannels.executor(aggregatorExecutors()).get();
   }
 
   @Bean

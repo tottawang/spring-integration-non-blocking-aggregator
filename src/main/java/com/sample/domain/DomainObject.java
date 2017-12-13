@@ -12,8 +12,8 @@ public class DomainObject {
     this.group = group;
   }
 
-  public String getkey() {
-    return name + group;
+  public DomainObjectKey getkey() {
+    return new DomainObjectKey(null, null, count);
   }
 
   public String getName() {
