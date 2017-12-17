@@ -10,7 +10,6 @@ import org.springframework.messaging.support.GenericMessage;
 import org.springframework.stereotype.Component;
 
 import com.sample.domain.DomainObject;
-import com.sample.domain.DomainObjectKey;
 
 @Component
 public class Handler {
@@ -28,12 +27,13 @@ public class Handler {
   public String handleMessage(Message<?> message) {
     DomainObject event = (DomainObject) message.getPayload();
     log.info("Handler: " + event.getName());
-    DomainObjectKey key = event.getkey();
-    event.setValue(null);
-    event = null;
-    aggregatorChannel.send(new GenericMessage<>(key, message.getHeaders()));
+    // DomainObjectKey key = event.getkey();
+    // event.setValue(null);
+    // event = null;
+    // aggregatorChannel.send(new GenericMessage<>(key, message.getHeaders()));
     // memory issue that we should not send full payload to aggregator
     // aggregatorChannel.send(new GenericMessage<>(event, message.getHeaders()));
+    aggregatorChannel.send(new GenericMessage<>(event.getCount(), message.getHeaders()));
     return "";
   }
 
